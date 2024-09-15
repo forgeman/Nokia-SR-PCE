@@ -1,0 +1,28 @@
+/configure system name "vsri8"
+/configure system time sntp shutdown
+/configure system time zone UTC
+/configure system bluetooth module A
+/configure system bluetooth power off
+/configure system security per-peer-queuing
+/configure system security dist-cpu-protection policy "_default-access-policy" create
+/configure system security dist-cpu-protection policy "_default-access-policy"
+/configure system security dist-cpu-protection policy "_default-network-policy" create
+/configure log
+/configure card 1 card-type iom-1
+/configure card 1 mda 1 mda-type me6-100gb-qsfp28
+/configure card 1 mda 1 no shutdown
+/configure card 1 no shutdown
+/configure port 1/1/c1 no shutdown
+/configure port 1/1/c2 no shutdown
+/configure port 1/1/c3 no shutdown
+/configure port 1/1/c4 no shutdown
+/configure port 1/1/c5 no shutdown
+/configure port 1/1/c6 no shutdown
+/configure system sync-if-timing begin
+/configure system sync-if-timing commit
+/configure router management
+/configure router Base interface "system" no shutdown
+/configure router Base pcep pcc shutdown
+/configure router Base pcep pcc peer 100.64.0.254 no shutdown
+/configure service customer 1 name "1" create
+/configure service customer 1 name "1" description "Default customer"

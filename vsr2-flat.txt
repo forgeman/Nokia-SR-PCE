@@ -23,6 +23,10 @@
 /configure card 2 mda 1 mda-type me2-100gb-qsfp28
 /configure card 2 mda 1 no shutdown
 /configure card 2 no shutdown
+/configure card 3 card-type iom4-e-b
+/configure card 3 mda 1 mda-type me2-100gb-qsfp28
+/configure card 3 mda 1 no shutdown
+/configure card 3 no shutdown
 /configure port 1/1/1 ethernet encap-type dot1q
 /configure port 1/1/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
 /configure port 1/1/1 ethernet lldp dest-mac nearest-bridge notification
@@ -51,23 +55,44 @@
 /configure port 2/1/2 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
 /configure port 2/1/2 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
 /configure port 2/1/2 no shutdown
+/configure port 3/1/1 ethernet encap-type dot1q
+/configure port 3/1/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
+/configure port 3/1/1 ethernet lldp dest-mac nearest-bridge notification
+/configure port 3/1/1 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
+/configure port 3/1/1 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
+/configure port 3/1/1 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
+/configure port 3/1/1 no shutdown
+/configure port 3/1/2 ethernet encap-type dot1q
+/configure port 3/1/2 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
+/configure port 3/1/2 ethernet lldp dest-mac nearest-bridge notification
+/configure port 3/1/2 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
+/configure port 3/1/2 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
+/configure port 3/1/2 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
+/configure port 3/1/2 no shutdown
 /configure system sync-if-timing begin
 /configure system sync-if-timing commit
 /configure router management
 /configure router Base interface "system" address 100.64.0.2/32
 /configure router Base interface "system" no shutdown
+/configure router Base interface "vsr1-pce1" no shutdown
+/configure router Base interface "vsr2-pce1" address 172.16.0.2/24
+/configure router Base interface "vsr2-pce1" port 2/1/1:0
+/configure router Base interface "vsr2-pce1" no shutdown
 /configure router Base interface "vsr2-vsr1" address 10.1.1.18/30
 /configure router Base interface "vsr2-vsr1" port 1/1/1:5
 /configure router Base interface "vsr2-vsr1" no shutdown
 /configure router Base interface "vsr2-vsr4" address 10.1.1.5/30
 /configure router Base interface "vsr2-vsr4" port 1/1/2:5
 /configure router Base interface "vsr2-vsr4" no shutdown
+/configure router Base interface "vsr2-vsr6" address 10.1.1.21/30
+/configure router Base interface "vsr2-vsr6" port 2/1/2:5
+/configure router Base interface "vsr2-vsr6" no shutdown
 /configure router Base autonomous-system 65505
 /configure router Base ecmp 2
 /configure router Base router-id 100.64.0.2
 /configure router Base mpls-labels sr-labels start 20001 end 20200
+/configure router Base isis 0 router-id 100.64.0.2
 /configure router Base isis 0 area-id 49.0001
-/configure router Base isis 0 database-export identifier 0 bgp-ls-identifier 0
 /configure router Base isis 0 traffic-engineering
 /configure router Base isis 0 advertise-router-capability area
 /configure router Base isis 0 loopfree-alternates remote-lfa node-protect
@@ -76,29 +101,33 @@
 /configure router Base isis 0 level 2 wide-metrics-only
 /configure router Base isis 0 segment-routing prefix-sid-range global
 /configure router Base isis 0 segment-routing no shutdown
-/configure router Base isis 0 interface "system" ipv4-node-sid index 1
+/configure router Base isis 0 interface "system" ipv4-node-sid index 2
 /configure router Base isis 0 interface "system" no shutdown
-/configure router Base isis 0 interface "vsr2-vsr4" interface-type point-to-point
-/configure router Base isis 0 interface "vsr2-vsr4" level 1 metric 1000
-/configure router Base isis 0 interface "vsr2-vsr4" level 2 metric 1000
-/configure router Base isis 0 interface "vsr2-vsr4" no shutdown
 /configure router Base isis 0 interface "vsr2-vsr1" interface-type point-to-point
 /configure router Base isis 0 interface "vsr2-vsr1" level 1 metric 25000
 /configure router Base isis 0 interface "vsr2-vsr1" level 2 metric 25000
 /configure router Base isis 0 interface "vsr2-vsr1" no shutdown
+/configure router Base isis 0 interface "vsr2-vsr4" interface-type point-to-point
+/configure router Base isis 0 interface "vsr2-vsr4" level 1 metric 1000
+/configure router Base isis 0 interface "vsr2-vsr4" level 2 metric 1000
+/configure router Base isis 0 interface "vsr2-vsr4" no shutdown
+/configure router Base isis 0 interface "vsr2-vsr6" interface-type point-to-point
+/configure router Base isis 0 interface "vsr2-vsr6" level 1 metric 26000
+/configure router Base isis 0 interface "vsr2-vsr6" level 2 metric 26000
+/configure router Base isis 0 interface "vsr2-vsr6" no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base pcep pcc local-address 100.64.0.2
+/configure router Base pcep pcc peer 100.64.0.254 no shutdown
 /configure router Base pcep pcc no shutdown
-/configure router Base mpls shutdown
 /configure router Base mpls interface "system" no shutdown
-/configure router Base mpls interface "vsr2-vsr4" no shutdown
 /configure router Base mpls interface "vsr2-vsr1" no shutdown
+/configure router Base mpls interface "vsr2-vsr4" no shutdown
 /configure router Base rsvp shutdown
 /configure router Base rsvp refresh-reduction-over-bypass enable
 /configure router Base rsvp interface "system" no shutdown
-/configure router Base rsvp interface "vsr2-vsr4" no shutdown
 /configure router Base rsvp interface "vsr2-vsr1" no shutdown
-/configure router Base mpls
+/configure router Base rsvp interface "vsr2-vsr4" no shutdown
+/configure router Base mpls no shutdown
 /configure service customer 1 name "1" create
 /configure service customer 1 name "1" description "Default customer"
 /configure router Base isis 0 no shutdown

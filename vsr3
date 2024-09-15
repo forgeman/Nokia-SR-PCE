@@ -2,7 +2,7 @@
 # All rights reserved. All use subject to applicable license agreements.
 # Built on Wed Jun 19 14:09:59 PDT 2019 by builder in /builds/c/195B/R2/panos/main
 
-# Generated FRI AUG 16 15:46:09 2019 UTC
+# Generated FRI OCT 04 20:21:22 2019 UTC
 
 exit all
 configure
@@ -77,6 +77,14 @@ echo "Card Configuration"
         exit
         no shutdown
     exit
+    card 3
+        card-type iom4-e-b
+        mda 1
+            mda-type me2-100gb-qsfp28
+            no shutdown
+        exit
+        no shutdown
+    exit
 #--------------------------------------------------
 echo "Port Configuration"
 #--------------------------------------------------
@@ -140,6 +148,36 @@ echo "Port Configuration"
         exit
         no shutdown
     exit
+    port 3/1/1
+        ethernet
+            encap-type dot1q
+            lldp
+                dest-mac nearest-bridge
+                    admin-status tx-rx
+                    notification
+                    tx-tlvs port-desc sys-name sys-desc sys-cap
+                    tx-mgmt-address system system-ipv6
+                    port-id-subtype tx-if-name
+                exit
+            exit
+        exit
+        no shutdown
+    exit
+    port 3/1/2
+        shutdown
+        ethernet
+            encap-type dot1q
+            lldp
+                dest-mac nearest-bridge
+                    admin-status tx-rx
+                    notification
+                    tx-tlvs port-desc sys-name sys-desc sys-cap
+                    tx-mgmt-address system system-ipv6
+                    port-id-subtype tx-if-name
+                exit
+            exit
+        exit
+    exit
 #--------------------------------------------------
 echo "System Sync-If-Timing Configuration"
 #--------------------------------------------------
@@ -186,8 +224,8 @@ echo "MPLS Label Range Configuration"
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
+            router-id 100.64.0.3
             area-id 49.0001
-            database-export identifier 0 bgp-ls-identifier 0
             traffic-engineering
             advertise-router-capability area
             loopfree-alternates
@@ -209,7 +247,17 @@ echo "ISIS Configuration"
                 no shutdown
             exit
             interface "system"
-                ipv4-node-sid index 1
+                ipv4-node-sid index 3
+                no shutdown
+            exit
+            interface "vsr3-vsr1"
+                interface-type point-to-point
+                level 1
+                    metric 1000
+                exit
+                level 2
+                    metric 1000
+                exit
                 no shutdown
             exit
             interface "vsr3-vsr5"
@@ -219,16 +267,6 @@ echo "ISIS Configuration"
                 exit
                 level 2
                     metric 1000
-                exit
-                no shutdown
-            exit
-            interface "vsr3-vsr1"
-                interface-type point-to-point
-                level 1
-                    metric 25000
-                exit
-                level 2
-                    metric 25000
                 exit
                 no shutdown
             exit
@@ -240,6 +278,9 @@ echo "Pcep Configuration"
         pcep
             pcc
                 local-address 100.64.0.3
+                peer 100.64.0.254
+                    no shutdown
+                exit
                 no shutdown
             exit
         exit
@@ -247,14 +288,13 @@ echo "Pcep Configuration"
 echo "MPLS Configuration"
 #--------------------------------------------------
         mpls
-            shutdown
             interface "system"
                 no shutdown
             exit
-            interface "vsr3-vsr5"
+            interface "vsr3-vsr1"
                 no shutdown
             exit
-            interface "vsr3-vsr1"
+            interface "vsr3-vsr5"
                 no shutdown
             exit
         exit
@@ -266,10 +306,10 @@ echo "RSVP Configuration"
             interface "system"
                 no shutdown
             exit
-            interface "vsr3-vsr5"
+            interface "vsr3-vsr1"
                 no shutdown
             exit
-            interface "vsr3-vsr1"
+            interface "vsr3-vsr5"
                 no shutdown
             exit
             no shutdown
@@ -278,6 +318,7 @@ echo "RSVP Configuration"
 echo "MPLS LSP Configuration"
 #--------------------------------------------------
         mpls
+            no shutdown
         exit
     exit
 
